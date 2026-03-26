@@ -696,4 +696,43 @@ describe('TableExtension', () => {
       });
     });
   });
+
+  describe('Delete key before table', () => {
+    it('deletes empty paragraph before table when pressing Delete', () => {
+      // Set up: empty paragraph followed by a table
+      editor.update(
+        () => {
+          const root = $getRoot().clear();
+          const paragraph = $createParagraphNode();
+          const table = $createTableNodeWithDimensions(2, 2);
+          root.append(paragraph, table);
+          paragraph.select();
+        },
+        {discrete: true},
+      );
+
+      // Verify initial state: 2 children (paragraph + table)
+      editor.read(() => {
+        expect($getRoot().getChildrenSize()).toBe(2);
+        expect($isParagraphNode($getRoot().getFirstChild())).toBe(true);
+      });
+
+      // Press Delete on the empty paragraph
+      editor.update(
+        () => {
+          const selection = $getSelection();
+          assert($isRangeSelection(selection), 'Expected range selection');
+          selection.deleteCharacter(false);
+        },
+        {discrete: true},
+      );
+
+      // Verify: empty paragraph is removed, table is the only top-level child
+      editor.read(() => {
+        const root = $getRoot();
+        expect(root.getChildrenSize()).toBe(1);
+        expect($isTableNode(root.getFirstChild())).toBe(true);
+      });
+    });
+  });
 });
