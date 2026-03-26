@@ -186,8 +186,8 @@ export class TableCellNode extends ElementNode {
 
       element.style.verticalAlign = this.getVerticalAlign() || 'top';
       element.style.textAlign = 'start';
-      if (this.__backgroundColor === null && this.hasHeader()) {
-        element.style.backgroundColor = '#f2f3f5';
+      if (this.__backgroundColor !== null) {
+        element.style.backgroundColor = this.__backgroundColor;
       }
     }
 
