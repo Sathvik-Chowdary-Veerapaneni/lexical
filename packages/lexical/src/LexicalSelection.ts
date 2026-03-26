@@ -1728,6 +1728,11 @@ export class RangeSelection implements BaseSelection {
         (parent === null ? null : parent.getNextSibling());
 
       if ($isElementNode(nextSibling) && nextSibling.isShadowRoot()) {
+        // Allow deletion to proceed when the anchor is an empty element
+        // so that the deleteCharacter logic can remove the empty element.
+        if ($isElementNode(anchorNode) && anchorNode.isEmpty()) {
+          return false;
+        }
         return true;
       }
     }
